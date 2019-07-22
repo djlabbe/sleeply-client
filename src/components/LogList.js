@@ -3,52 +3,56 @@ import MorningLog from './MorningLog';
 import NapLog from './NapLog';
 import BedTimeLog from './BedTimeLog';
 import NightLog from './NightLog';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const LOG_QUERY = gql`
+  query {
+    child(id: "cjydlwao002v50759vmyra0mt") {
+      log {
+        entries {
+          id
+          type
+          note
+        }
+      }
+    }
+  }
+`;
 
 class LogList extends Component {
   renderEntry(logEntry) {
-    if (logEntry.type === 'MORNING') {
-      return <MorningLog key={logEntry.id} logEntry={logEntry} />;
-    }
-
-    if (logEntry.type === 'NAP') {
-      return <NapLog key={logEntry.id} logEntry={logEntry} />;
-    }
-
-    if (logEntry.type === 'BEDTIME') {
-      return <BedTimeLog key={logEntry.id} logEntry={logEntry} />;
-    }
-
-    if (logEntry.type === 'NIGHT') {
-      return <NightLog key={logEntry.id} logEntry={logEntry} />;
+    switch (logEntry.type) {
+      case 'MORNING':
+        return <MorningLog key={logEntry.id} logEntry={logEntry} />;
+      case 'NAP':
+        return <NapLog key={logEntry.id} logEntry={logEntry} />;
+      case 'BEDTIME':
+        return <BedTimeLog key={logEntry.id} logEntry={logEntry} />;
+      case 'NIGHT':
+        return <NightLog key={logEntry.id} logEntry={logEntry} />;
+      default:
+        return <div>Error</div>;
     }
   }
 
   render() {
-    const logsToRender = [
-      {
-        id: '1',
-        type: 'MORNING',
-        note: 'Prisma turns your database into a GraphQL API 😎'
-      },
-      {
-        id: '2',
-        type: 'NAP',
-        note: 'The best GraphQL client'
-      },
-      {
-        id: '3',
-        type: 'BEDTIME',
-        note: 'Stella went to bed nicely'
-      },
-      {
-        id: '2',
-        type: 'NIGHT',
-        note: 'Johnny woke up at midnight it sucked'
-      }
-    ];
-
     return (
-      <div>{logsToRender.map(logEntry => this.renderEntry(logEntry))}</div>
+      <Query query={LOG_QUERY}>
+        {({ loading, error, data }) => {
+          if (loading) return <div>FETCHING</div>;
+          if (error) return <div>ERROR</div>;
+
+          const entriesToRender = data.child.log.entries;
+
+          return (
+            <div>
+              Hello
+              {entriesToRender.map(logEntry => this.renderEntry(logEntry))}
+            </div>
+          );
+        }}
+      </Query>
     );
   }
 }

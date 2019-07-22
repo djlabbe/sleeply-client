@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LogList from './LogList';
-import Login from './Login';
-import Header from './Header';
+import Routes from './routing/Routes';
+import Landing from './Landing';
+import NavBar from './NavBar';
 
 import '../style/App.css';
 
@@ -10,10 +10,10 @@ function App() {
   return (
     <Router>
       <Fragment>
-        <Header />
+        <NavBar />
         <Switch>
-          <Route exact path='/' component={LogList} />
-          <Route exact path='/login' component={Login} />
+          <Route exact path='/' component={Landing} />
+          <Route component={Routes} />
         </Switch>
       </Fragment>
     </Router>

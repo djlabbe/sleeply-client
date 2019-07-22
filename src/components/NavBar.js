@@ -38,7 +38,7 @@ class NavBar extends Component {
       <nav className='navbar bg-dark'>
         <h1>
           <Link to='/'>
-            <i className='fas fa-grip-horizontal' /> Sleeply
+            <i className='fas fa-spinner' /> Sleeply
           </Link>
         </h1>
         {<Fragment>{this.guestLinks} </Fragment>}

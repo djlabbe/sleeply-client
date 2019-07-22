@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import { AUTH_TOKEN } from '../constants';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -30,46 +30,56 @@ class Login extends Component {
   render() {
     const { login, email, password, name } = this.state;
     return (
-      <div>
-        <h4>{login ? 'Login' : 'Sign Up'}</h4>
-        <div>
+      <Fragment>
+        <h1 className='large text-primary'>{login ? 'Login' : 'Sign Up'}</h1>
+        <form className='form'>
           {!login && (
-            <input
-              value={name}
-              onChange={e => this.setState({ name: e.target.value })}
-              type='text'
-              placeholder='Your name'
-            />
+            <div>
+              <small className='form-text'>Name</small>
+              <input
+                value={name}
+                onChange={e => this.setState({ name: e.target.value })}
+                type='text'
+                placeholder='Full name'
+              />
+            </div>
           )}
-          <input
-            value={email}
-            onChange={e => this.setState({ email: e.target.value })}
-            type='text'
-            placeholder='Your email address'
-          />
-          <input
-            value={password}
-            onChange={e => this.setState({ password: e.target.value })}
-            type='password'
-            placeholder='Choose a safe password'
-          />
-        </div>
+          <div>
+            <small className='form-text'>Email</small>
+            <input
+              value={email}
+              onChange={e => this.setState({ email: e.target.value })}
+              type='text'
+            />
+          </div>
+          <div>
+            <small className='form-text'>Password</small>
+            <input
+              value={password}
+              onChange={e => this.setState({ password: e.target.value })}
+              type='password'
+            />
+          </div>
+        </form>
 
-        <div>
+        <div className='my-1'>
           <Mutation
             mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
             variables={{ email, password, name }}
             onCompleted={data => this._confirm(data)}
           >
             {mutation => (
-              <div onClick={mutation}>{login ? 'login' : 'create account'}</div>
+              <div className='btn btn-primary' onClick={mutation}>
+                {login ? 'login' : 'create account'}
+              </div>
             )}
           </Mutation>
-          <div onClick={() => this.setState({ login: !login })}>
+
+          <div className='btn' onClick={() => this.setState({ login: !login })}>
             {login ? 'need to create an account?' : 'already have an account?'}
           </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 

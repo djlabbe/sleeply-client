@@ -4,6 +4,7 @@ import NapLog from './NapLog';
 import BedTimeLog from './BedTimeLog';
 import NightLog from './NightLog';
 import { Query } from 'react-apollo';
+import Spinner from './Spinner';
 import gql from 'graphql-tag';
 
 const LOG_QUERY = gql`
@@ -40,14 +41,13 @@ class LogList extends Component {
     return (
       <Query query={LOG_QUERY}>
         {({ loading, error, data }) => {
-          if (loading) return <div>FETCHING</div>;
+          if (loading) return <Spinner />;
           if (error) return <div>ERROR</div>;
 
           const entriesToRender = data.child.log.entries;
 
           return (
             <div>
-              Hello
               {entriesToRender.map(logEntry => this.renderEntry(logEntry))}
             </div>
           );

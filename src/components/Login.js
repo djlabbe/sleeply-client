@@ -67,6 +67,9 @@ class Login extends Component {
             mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
             variables={{ email, password, name }}
             onCompleted={data => this._confirm(data)}
+            update={cache => {
+              cache.writeData({ data: { isLoggedIn: true } });
+            }}
           >
             {mutation => (
               <div className='btn btn-primary' onClick={mutation}>

@@ -1,6 +1,15 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
+import { ApolloConsumer } from 'react-apollo';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+
+const IS_LOGGED_IN = gql`
+  query IsUserLoggedIn {
+    isLoggedIn @client
+  }
+`;
 
 class NavBar extends Component {
   authLinks = (
@@ -17,10 +26,20 @@ class NavBar extends Component {
         </Link>
       </li>
       <li>
-        <a href='#!'>
-          <i className='fas fa-sign-out-alt' />
-          <span className='hide-sm'> Logout</span>
-        </a>
+        <ApolloConsumer>
+          {client => (
+            <Link
+              onClick={() => {
+                client.writeData({ data: { isLoggedIn: false } });
+                localStorage.clear();
+              }}
+              to='/'
+            >
+              <i className='fas fa-sign-out-alt' />
+              <span className='hide-sm'> Logout</span>
+            </Link>
+          )}
+        </ApolloConsumer>
       </li>
     </ul>
   );
@@ -41,7 +60,10 @@ class NavBar extends Component {
             <i className='fas fa-spinner' /> Sleeply
           </Link>
         </h1>
-        {<Fragment>{this.guestLinks} </Fragment>}
+
+        <Query query={IS_LOGGED_IN}>
+          {({ data }) => (data.isLoggedIn ? this.authLinks : this.guestLinks)}
+        </Query>
       </nav>
     );
   }

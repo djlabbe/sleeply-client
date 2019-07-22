@@ -1,35 +1,45 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Spinner from './Spinner';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
-const Landing = ({ isAuthenticated, loading }) => {
-  console.log(loading);
-  if (loading) {
-    return <Spinner />;
+const IS_LOGGED_IN = gql`
+  query IsUserLoggedIn {
+    isLoggedIn @client
   }
+`;
 
-  if (isAuthenticated) {
-    return <Redirect to='/dashboard' />;
+class Landing extends Component {
+  render() {
+    return (
+      <Query query={IS_LOGGED_IN}>
+        {({ loading, error, data }) => {
+          if (loading) return <Spinner />;
+          if (data.isLoggedIn) return <Redirect to='/logs' />;
+
+          return (
+            <section className='landing'>
+              <div className='light-overlay'>
+                <div className='landing-inner'>
+                  <h1 className='x-large'>sleeply</h1>
+                  <p className='lead'>Because it takes a village...</p>
+                  <div className='buttons'>
+                    <Link to='/register' className='btn btn-primary'>
+                      Sign Up
+                    </Link>
+                    <Link to='/login' className='btn btn-light'>
+                      Login
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        }}
+      </Query>
+    );
   }
-
-  return (
-    <section className='landing'>
-      <div className='dark-overlay'>
-        <div className='landing-inner'>
-          <h1 className='x-large'>sleeply</h1>
-          <p className='lead'>Because it takes a village...</p>
-          <div className='buttons'>
-            <Link to='/register' className='btn btn-primary'>
-              Sign Up
-            </Link>
-            <Link to='/login' className='btn btn-light'>
-              Login
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+}
 
 export default Landing;

@@ -8,6 +8,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { AUTH_TOKEN } from './constants';
+import { resolvers, typeDefs } from './resolvers';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000'
@@ -23,9 +24,19 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const cache = new InMemoryCache();
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache,
+  typeDefs,
+  resolvers
+});
+
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('auth-token')
+  }
 });
 
 ReactDOM.render(

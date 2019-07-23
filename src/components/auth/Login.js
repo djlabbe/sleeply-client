@@ -10,7 +10,6 @@ const SIGNUP_MUTATION = gql`
     }
   }
 `;
-
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -24,14 +23,21 @@ class Login extends Component {
     login: true, // switch between Login and SignUp
     email: '',
     password: '',
-    name: ''
+    name: '',
+    error: ''
   };
 
   render() {
-    const { login, email, password, name } = this.state;
+    const { login, email, password, name, error } = this.state;
     return (
       <Fragment>
         <h1 className='large text-primary'>{login ? 'Login' : 'Sign Up'}</h1>
+        {error &&
+          error.graphQLErrors.map(err => (
+            <div key={err.message} className='text-danger'>
+              {err.message}
+            </div>
+          ))}
         <form className='form'>
           {!login && (
             <div>
@@ -67,6 +73,7 @@ class Login extends Component {
             mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
             variables={{ email, password, name }}
             onCompleted={data => this._confirm(data)}
+            onError={error => this.setState({ error })}
             update={cache => {
               cache.writeData({ data: { isLoggedIn: true } });
             }}
@@ -78,13 +85,23 @@ class Login extends Component {
             )}
           </Mutation>
 
-          <div className='btn' onClick={() => this.setState({ login: !login })}>
+          <div className='btn' onClick={this.toggleForm}>
             {login ? 'need to create an account?' : 'already have an account?'}
           </div>
         </div>
       </Fragment>
     );
   }
+
+  toggleForm = () => {
+    this.setState({
+      login: !this.state.login,
+      email: '',
+      password: '',
+      name: '',
+      error: ''
+    });
+  };
 
   _confirm = async data => {
     const { token } = this.state.login ? data.login : data.signup;

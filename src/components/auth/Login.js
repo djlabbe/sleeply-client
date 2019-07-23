@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { AUTH_TOKEN } from '../constants';
+import { AUTH_TOKEN } from '../../constants';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 

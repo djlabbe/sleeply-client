@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Login from '../Login';
+import Login from '../auth/Login';
 import NotFound from './NotFound';
-import LogList from '../LogList';
+import LogList from '../logs/LogList';
 
 const Routes = () => {
   return (

@@ -4,7 +4,7 @@ import NapLog from './NapLog';
 import BedTimeLog from './BedTimeLog';
 import NightLog from './NightLog';
 import { Query } from 'react-apollo';
-import Spinner from './Spinner';
+import Spinner from '../layout/Spinner';
 import gql from 'graphql-tag';
 
 const LOG_QUERY = gql`

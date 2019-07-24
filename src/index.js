@@ -29,13 +29,23 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// TODO: This works for 1 error. Need to see about creating a mutation
+// TODO: to put mutliple errors in the cache.
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) => {
-      // TODO: Do something with the cache??
-      // console.log(
-      //   `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      // );
+    // graphQLErrors.forEach(({ message, locations, path }) => {
+    //   console.log(
+    //     `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+    //   );
+    // });
+
+    cache.writeData({
+      data: {
+        alert: {
+          message: graphQLErrors[0].message,
+          alertType: 'danger'
+        }
+      }
     });
   }
   if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -50,11 +60,7 @@ const client = new ApolloClient({
 
 cache.writeData({
   data: {
-    isLoggedIn: !!localStorage.getItem(AUTH_TOKEN),
-    alert: {
-      alertType: '',
-      message: ''
-    }
+    isLoggedIn: !!localStorage.getItem(AUTH_TOKEN)
   }
 });
 

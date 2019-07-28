@@ -10,15 +10,18 @@ class LoginForm extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const { name, email, password } = this.state;
+    const { name, email, password, password2 } = this.state;
+    if (!this.props.login && password !== password2) {
+      return;
+    }
     this.props.mutation({ variables: { email, password, name } });
   };
 
   toggleForm = () => {
     this.setState({
+      name: '',
       password: '',
       password2: '',
-      name: '',
       error: ''
     });
   };

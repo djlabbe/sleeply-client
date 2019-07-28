@@ -22,14 +22,11 @@ class Landing extends Component {
             <section className='landing'>
               <div className='light-overlay'>
                 <div className='landing-inner'>
-                  <h1 className='x-large'>sleeply</h1>
+                  <h1 className='x-large'>Sleeply</h1>
                   <p className='lead'>Because it takes a village...</p>
                   <div className='buttons'>
-                    <Link to='/register' className='btn btn-primary'>
-                      Sign Up
-                    </Link>
                     <Link to='/login' className='btn btn-light'>
-                      Login
+                      Get Started
                     </Link>
                   </div>
                 </div>

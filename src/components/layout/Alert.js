@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const duration = 4 * 1000; // 4 seconds
+const duration = 5 * 1000; // 5 seconds
 
 const GET_ALERT = gql`
   {
@@ -18,6 +18,8 @@ const Alert = () => {
     <Query query={GET_ALERT}>
       {({ data: { alert }, client }) => {
         if (!alert) return null;
+
+        /* Update cache after a delay to clear out the alert and remove the toast */
         setTimeout(
           () =>
             client.writeData({

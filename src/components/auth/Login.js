@@ -41,7 +41,9 @@ class Login extends Component {
               this.props.history.push(`/`);
             }}
             onError={error => {
-              const msg = "Oops, that's not a match";
+              const msg = this.state.login
+                ? "Oops, that's not a match"
+                : 'It looks like an account already exists for that email';
               client.writeData({
                 data: {
                   alert: {
@@ -52,7 +54,7 @@ class Login extends Component {
               });
             }}
           >
-            {(mutation, { loading, error }) => {
+            {(mutation, { loading }) => {
               if (loading) return <Spinner />;
               return (
                 <LoginForm

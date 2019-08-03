@@ -43,7 +43,7 @@ class LogList extends Component {
         {({ loading, error, data }) => {
           if (loading) return <Spinner />;
           if (error) return <div>ERROR</div>;
-
+          if (!data.child) return <div>No entries yet</div>
           const entriesToRender = data.child.log.entries;
 
           return (
